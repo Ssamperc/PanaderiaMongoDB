@@ -1,10 +1,11 @@
 package com.panaderia.panaderia.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "categoria")
+@Document(collection = "categoria")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,10 +14,8 @@ import lombok.*;
 public class CategoriaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
+    @Field("nombre")
     private String nombre;
-
 }

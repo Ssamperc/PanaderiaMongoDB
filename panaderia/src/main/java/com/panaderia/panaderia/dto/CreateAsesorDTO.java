@@ -8,5 +8,4 @@ public class CreateAsesorDTO {
     private String nombre;
     private String cc;
     private Integer age;
-
 }
