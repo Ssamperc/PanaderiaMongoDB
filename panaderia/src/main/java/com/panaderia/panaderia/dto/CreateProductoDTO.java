@@ -1,12 +1,16 @@
 package com.panaderia.panaderia.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CreateProductoDTO {
 
     private String nombre;
     private String cantidad;
     private Integer existencia;
-
+    private String categoriaId;
 }

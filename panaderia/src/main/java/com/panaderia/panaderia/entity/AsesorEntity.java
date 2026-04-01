@@ -1,24 +1,26 @@
 package com.panaderia.panaderia.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "asesor")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Document(collection = "Asesor")
+@Data
 public class AsesorEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
+
+    @Field("nombre")
     private String nombre;
+
+    @Field("cc")
     private String cc;
+
+    @Field("age")
     private Integer age;
 
-
+    @Field("evidence")
+    private String evidence;
 }

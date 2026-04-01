@@ -1,12 +1,13 @@
 package com.panaderia.panaderia.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "productos")
+@Document(collection = "productos")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,28 +16,23 @@ import java.time.LocalDateTime;
 public class ProductoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
+    @Field("nombre")
     private String nombre;
 
-    private Integer cantidad;
+    @Field("cantidad")
+    private String cantidad;
 
+    @Field("existencia")
     private Integer existencia;
 
-    @Column(name = "fecha_creacion")
+    @Field("fecha_creacion")
     private LocalDateTime fechaCreacion;
 
-    @Column(name = "fecha_edicion")
+    @Field("fecha_edicion")
     private LocalDateTime fechaEdicion;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private CategoriaEntity categoria;
-
-    @PrePersist
-    public void prePersist() {
-        this.fechaCreacion = LocalDateTime.now();
-        this.fechaEdicion = LocalDateTime.now();
-    }
+    @Field("categoria_id")
+    private String categoriaId;
 }
