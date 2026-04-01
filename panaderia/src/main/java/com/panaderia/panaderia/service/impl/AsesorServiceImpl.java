@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,26 +60,21 @@ public class AsesorServiceImpl implements AsesorService {
         }
 
         try {
-            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
-            Files.createDirectories(uploadPath);
-
-            String originalFilename = file.getOriginalFilename();
-            String safeFilename = UUID.randomUUID() + "_" + (originalFilename != null ? originalFilename : "archivo");
-            Path filePath = uploadPath.resolve(safeFilename);
-
-            Files.copy(file.getInputStream(), filePath);
+            byte[] fileBytes = file.getBytes();
+            String base64 = Base64.getEncoder().encodeToString(fileBytes);
 
             AsesorEntity asesorEntity = new AsesorEntity();
             asesorEntity.setId(UUID.randomUUID().toString());
             asesorEntity.setNombre(nombre);
             asesorEntity.setCc(cc);
             asesorEntity.setAge(age);
-            asesorEntity.setEvidence("uploads/asesores/" + safeFilename);
+
+            asesorEntity.setEvidence(base64);
 
             AsesorEntity saved = asesorRepository.save(asesorEntity);
             return asesorMapper.entityToModel(saved);
         } catch (IOException e) {
-            throw new RuntimeException("Error al guardar el archivo", e);
+            throw new RuntimeException("Error al convertir el archivo a Base64", e);
         }
     }
 
