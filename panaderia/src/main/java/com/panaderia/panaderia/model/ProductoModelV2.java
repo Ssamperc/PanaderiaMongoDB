@@ -1,10 +1,14 @@
 package com.panaderia.panaderia.model;
-import lombok.Data;
 
-@Data
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductoModelV2 {
 
-    private long id;
+    private String id;
     private String nombre;
-
 }

@@ -1,18 +1,21 @@
 package com.panaderia.panaderia.model;
 
-import com.panaderia.panaderia.entity.CategoriaEntity;
-
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
-@Data
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductoModel {
 
-    private Long id;
+    private String id;
     private String nombre;
-    private Integer cantidad;
+    private String cantidad;
     private Integer existencia;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaEdicion;
-    private CategoriaEntity categoria;
+    private String categoriaId;
 }

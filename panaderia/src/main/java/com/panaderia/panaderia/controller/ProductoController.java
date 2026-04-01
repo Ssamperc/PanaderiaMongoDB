@@ -32,7 +32,7 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar producto por ID y retornar solo ID y nombre")
-    public ProductoModelV2 getById(@PathVariable Long id) {
+    public ProductoModelV2 getById(@PathVariable String id) {
         return productoService.getProductoById(id);
     }
 
@@ -42,7 +42,7 @@ public class ProductoController {
         return productoService.getAllProductos(page, size);
     }
 
-    @GetMapping("/asesores/v2")
+    @GetMapping("/v2")
     @Operation(summary = "Mostrar todos los productos")
     public List<ProductoModelV2> getAllProductosV2() {
         return productoService.getAllProductosV2();
@@ -50,7 +50,11 @@ public class ProductoController {
 
     @GetMapping("/page/{page}/{size}/{nombre}")
     @Operation(summary = "Buscar productos paginados por nombre")
-    public Page<ProductoModelV2> getAllProductosV2(@PathVariable int page, @PathVariable int size, @PathVariable String nombre) {
+    public Page<ProductoModelV2> getAllProductosV2(
+            @PathVariable int page,
+            @PathVariable int size,
+            @PathVariable String nombre
+    ) {
         return productoService.getAllProductosV2(page, size, nombre);
     }
 }
