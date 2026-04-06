@@ -1,8 +1,11 @@
 package com.panaderia.panaderia.controller;
 
 import com.panaderia.panaderia.dto.CreateAsesorDTO;
+import com.panaderia.panaderia.dto.SyncAsesorDTO;
+import com.panaderia.panaderia.entity.AsesorEntity;
 import com.panaderia.panaderia.model.AsesorModel;
 import com.panaderia.panaderia.model.AsesorModelV2;
+import com.panaderia.panaderia.repository.AsesorRepository;
 import com.panaderia.panaderia.service.AsesorService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import java.util.List;
 public class AsesorController {
 
     private final AsesorService asesorService;
+    private final AsesorRepository asesorRepository;
 
     @PostMapping(value = "/create")
     @Operation(summary = "Endpoint que se encarga de realizar la creacion de asesores - V1")
@@ -32,10 +36,22 @@ public class AsesorController {
         return asesorService.createAsesorV2(asesor);
     }
 
+    @PostMapping(value = "/create-sync")
+    @Operation(summary = "Endpoint interno para sincronizar asesores desde otro microservicio")
+    public AsesorModel createSync(@RequestBody SyncAsesorDTO dto) {
+        AsesorEntity entity = new AsesorEntity();
+        entity.setId(dto.getId());
+        entity.setNombre(dto.getNombre());
+        entity.setCc(dto.getCc());
+        entity.setAge(dto.getAge());
+
+        AsesorEntity saved = asesorRepository.save(entity);
+        return new AsesorModel(saved.getId(), saved.getNombre(), saved.getCc(), saved.getAge(), saved.getEvidence());
+    }
+
     @PostMapping(value = "/create-with-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Endpoint que se encarga de realizar la creacion de asesores con archivo")
-    public AsesorModel createWithFile(@RequestParam String nombre, @RequestParam String cc, @RequestParam Integer age, @RequestPart MultipartFile file
-    ) {
+    public AsesorModel createWithFile(@RequestParam String nombre, @RequestParam String cc, @RequestParam Integer age, @RequestPart MultipartFile file) {
         return asesorService.createAsesorWithFile(nombre, cc, age, file);
     }
 
@@ -59,8 +75,7 @@ public class AsesorController {
 
     @GetMapping("/filter/page/{page}/{size}")
     @Operation(summary = "Buscar asesores paginados por nombre")
-    public Page<AsesorModelV2> getAllAsesoresV2(@PathVariable int page, @PathVariable int size, @RequestParam(required = false) String nombre
-    ) {
+    public Page<AsesorModelV2> getAllAsesoresV2(@PathVariable int page, @PathVariable int size, @RequestParam(required = false) String nombre) {
         return asesorService.getAllAsesoresV2(page, size, nombre);
     }
 }

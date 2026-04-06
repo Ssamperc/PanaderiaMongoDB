@@ -1,12 +1,14 @@
 package com.panaderia.panaderia.service.impl;
 
 import com.panaderia.panaderia.dto.CreateAsesorDTO;
+import com.panaderia.panaderia.dto.SyncAsesorDTO;
 import com.panaderia.panaderia.entity.AsesorEntity;
 import com.panaderia.panaderia.mappers.AsesorMapper;
 import com.panaderia.panaderia.model.AsesorModel;
 import com.panaderia.panaderia.model.AsesorModelV2;
 import com.panaderia.panaderia.repository.AsesorRepository;
 import com.panaderia.panaderia.service.AsesorService;
+import com.panaderia.panaderia.service.MigrateAsesorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -25,31 +27,54 @@ public class AsesorServiceImpl implements AsesorService {
 
     private final AsesorRepository asesorRepository;
     private final AsesorMapper asesorMapper;
+    private final MigrateAsesorService migrateAsesorService;
 
     @Value("${app.files.asesor.upload-dir}")
     private String uploadDir;
 
     @Override
     public AsesorModel createAsesor(CreateAsesorDTO createAsesorDTO) {
+        String id = UUID.randomUUID().toString();
+
         AsesorEntity asesorEntity = new AsesorEntity();
-        asesorEntity.setId(UUID.randomUUID().toString());
+        asesorEntity.setId(id);
         asesorEntity.setNombre(createAsesorDTO.getNombre());
         asesorEntity.setCc(createAsesorDTO.getCc());
         asesorEntity.setAge(createAsesorDTO.getAge());
 
         AsesorEntity saved = asesorRepository.save(asesorEntity);
+
+        SyncAsesorDTO syncDto = new SyncAsesorDTO(
+                saved.getId(),
+                saved.getNombre(),
+                saved.getCc(),
+                saved.getAge()
+        );
+        migrateAsesorService.sendAsesorToOtherService(syncDto);
+
         return asesorMapper.entityToModel(saved);
     }
 
     @Override
     public AsesorModelV2 createAsesorV2(CreateAsesorDTO createAsesorDTO) {
+        String id = UUID.randomUUID().toString();
+
         AsesorEntity asesorEntity = new AsesorEntity();
-        asesorEntity.setId(UUID.randomUUID().toString());
+        asesorEntity.setId(id);
         asesorEntity.setNombre(createAsesorDTO.getNombre());
         asesorEntity.setCc(createAsesorDTO.getCc());
         asesorEntity.setAge(createAsesorDTO.getAge());
 
         AsesorEntity saved = asesorRepository.save(asesorEntity);
+
+        SyncAsesorDTO syncDto = new SyncAsesorDTO(
+                saved.getId(),
+                saved.getNombre(),
+                saved.getCc(),
+                saved.getAge()
+        );
+        migrateAsesorService.sendAsesorToOtherService(syncDto);
+
         return asesorMapper.entityToModelV2(saved);
     }
 
@@ -68,7 +93,6 @@ public class AsesorServiceImpl implements AsesorService {
             asesorEntity.setNombre(nombre);
             asesorEntity.setCc(cc);
             asesorEntity.setAge(age);
-
             asesorEntity.setEvidence(base64);
 
             AsesorEntity saved = asesorRepository.save(asesorEntity);

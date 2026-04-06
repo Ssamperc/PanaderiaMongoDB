@@ -1,4 +1,4 @@
-package com.panaderia.panaderia.model;
+package com.panaderia.panaderia.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AsesorModelV2 {
-
+public class SyncAsesorDTO {
     private String id;
     private String nombre;
-    private String evidence;
+    private String cc;
+    private Integer age;
 }
